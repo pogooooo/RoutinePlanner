@@ -1,78 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import { format } from 'date-fns';
-import { enUS, ko } from 'date-fns/locale';
+import TodoDisplay from "./TodoDisplay";
+
 
 const TodoMainStyle = styled.div `
         display: flex;
-        background-color: rgba(0, 0, 0, 0.05);
-        height: 95vh;
+        height: 93vh;
     `
-
-const TodoDisplay = styled.div`
-    background-color: white;
-    margin: 5vh 5vw 5vh 10vw;
-    width: 35vw;
-    display: flex;
-    flex-direction: column;
-    border-radius: 25px;
-    box-shadow:inset 0 5px 5px 3px rgba(0, 0, 0, .1);
-`
-
-const PrintYear = styled.div`
-    margin: 5vh 5vw 0 5vw;
-    font-size: 1.5rem;
-`
-
-const PrintDay = styled.div`
-    margin: 0 5vw 5vh 5vw;
-    font-size: 1rem;
-`
-
-const Todo = styled.div`
-    margin: 3vh 5vw 0 5vw;
-    display: flex;
-    justify-content: space-between;
-`
-
-const TodoItem = styled.div`
-    font-size: 1rem;
-    display: flex;
-`
-
-const TodoColorBar = styled.div`
-    width: 1vw;
-    margin-right: 1vw;
-    background-color: ${({ priority }) => {
-        switch (priority) {
-            case 'high':
-                return '#DC5E5E';      // 높은 중요도: 빨간색
-            case 'medium':
-                return '#DCD15E';       // 중간 중요도: 주황색
-            case 'low':
-                return '#6DDC5E';        // 낮은 중요도: 초록색
-            default:
-                return 'black';        // 기본: 검정색
-        }
-    }};
-`
-
-const TodoCheck = styled.input`
-    width: 24px;
-    height: 24px;
-    margin: 0;
-    border: 2px solid #4CAF50;
-    
-    & > input[type="checkbox"] {
-        visibility: hidden;
-    }
-`
-
-const Horizon = styled.hr`         /* 기본 테두리 제거 */
-    height: 1px;                /* 선의 높이 */
-    background-color: black;  /* 배경 색상 설정 */
-    margin: 3vh 3vw 0vh 3vw;
-`
 
 const LeftDiv = styled.div`
         margin: 5vh 10vw 5vh 0;
@@ -94,11 +28,12 @@ const UserProfile = styled.div`
 
 const User = styled.div`
     display: flex;
+    cursor: pointer;
 `
 
 const UserIcon = styled.div`
-    width: 4vw;
-    height: 4vw;
+    width: 3vw;
+    height: 3vw;
     margin: 5vh 1vw 0 3vw;
     background-color: #5B51E2;
     border-radius: 50%;
@@ -150,7 +85,7 @@ const UserProgress = styled.div`
     padding-top: 1vh;
     border-radius: 25px;
     width: 20vw;
-    height: 25vh;
+    height: 20vh;
     box-shadow:inset 0 5px 5px 3px rgba(0, 0, 0, .1);
 `
 
@@ -187,32 +122,81 @@ const UserProgressBackgroundBar = styled.div`
     border-radius: 25px;
 `
 
+
 const UserRank = styled.div`
     background-color: rgba(0, 0, 0, 0.05);
     border-radius: 25px;
     margin-right: 3vw;
     margin-left: 3vw;
-    height: 25vh;
+    height: 20vh;
     width: 12vw;
     box-shadow:inset 0 5px 5px 3px rgba(0, 0, 0, .1);
+    padding-top: 1vh;
+    cursor: pointer;
+`
+
+const UserRankName = styled.div`
+    margin: 1vh 1vw 1vh 1vw;
+    font-size: 1.5rem;
+`
+
+const UserCurrentRank = styled.div`
+    margin: 3vh 1vw 1vh 1vw;
+    font-size: 2rem;
+    text-align: center;
 `
 
 const HeatMap = styled.div`
-        background-color: dodgerblue;
-        height: 35vh;
-    `
+    background-color: white;
+    border-radius: 25px;
+    height: 30vh;
+    box-shadow:inset 0 5px 5px 3px rgba(0, 0, 0, .1);
+    
+    display: flex;
+    flex-direction: column;
+`
+
+const HeatMapTitle = styled.div`
+    font-size: 1.5rem;
+    margin: 5vh 0 0 3vw;
+`
+
+const HeatMapLabel = styled.div`
+    display: flex;
+    margin-top: 3vh;
+    width: 600px;
+    
+    & > span {
+        margin-right: 190px;
+    }
+`
+
+const GridDiv = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+`
+
+const Grid = styled.div`
+    display: grid;
+    grid-template-columns: repeat(30, 20px); // 전체 30칸, 각 칸 20px
+    grid-template-rows: repeat(3, 20px); // 총 3줄
+    
+`
+
+const Cell = styled.div`
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+`
+
+const ColoredCell = styled(Cell)`
+    background: ${props => props.color};
+`
 
 const TodoMain = ( ) => {
-
-    const today = new Date();
-    const YearMonth = format(today, 'yyyy MMMM', { locale: enUS });
-    const DateWeek = format(today, 'd일 EEEE', { locale: ko });
-
-    const todos = [
-        { id: 1, text: 'React 공부하기', priority: 'high' },
-        { id: 2, text: '점심 준비하기', priority: 'medium' },
-        { id: 3, text: '운동하기', priority: 'low' }
-    ];
 
     const todoProgress = [
         { id: 1, text: 'React 공부하기', progress: 36 },
@@ -221,31 +205,21 @@ const TodoMain = ( ) => {
     ];
 
     const userRankInfo = [
-        { id: 1, text: 'React 공부하기', progress: 36 },
-        { id: 1, text: 'React 공부하기', progress: 36 }
+        { id: 1, text: 'user1', rank: 328 }
     ]
+
+    const data = new Array(90).fill(false);
+    data[12] = true; // 예제 색상 적용
+    data[43] = true;
+    data[67] = true;
 
     return(
         <TodoMainStyle>
-            <TodoDisplay>
-                <PrintYear>{YearMonth}</PrintYear>
-                <PrintDay>{DateWeek}</PrintDay>
-                {todos.map((todo) => (
-
-                    <Todo>
-                        <TodoItem>
-                            <TodoColorBar priority={todo.priority}></TodoColorBar>
-                            <div>{todo.text}</div>
-                        </TodoItem>
-                        <TodoCheck type="checkbox" />
-                    </Todo>
-                ))}
-                <Horizon/>
-            </TodoDisplay>
+            <TodoDisplay></TodoDisplay>
             <LeftDiv>
                 <Profile>
                     <UserProfile>
-                        <User>
+                        <User onClick={() => window.location.href = 'http://localhost:3000/signIn'}>
                             <UserIcon></UserIcon>
                             <UserName>HYUNJUNG</UserName>
                         </User>
@@ -267,15 +241,29 @@ const TodoMain = ( ) => {
                                     <UserProgressBackgroundBar></UserProgressBackgroundBar>
                                 </UserProgressItem>
                             ))}
+                            {/*<GradationDiv></GradationDiv>*/}
                         </UserProgress>
-                        <UserRank>
-                            <UserRankName></UserRankName>
-                            <UserCurrentRank></UserCurrentRank>
+                        <UserRank onClick={() => window.location.href = '/ranking'}>
+                            <UserRankName>현재 랭킹</UserRankName>
+                            <UserCurrentRank>{userRankInfo[0].rank}등</UserCurrentRank>
                         </UserRank>
                     </UserInfo>
                 </Profile>
                 <HeatMap>
-                    here heatmap
+                    <HeatMapTitle>HeatMap</HeatMapTitle>
+                    <GridDiv>
+                        <HeatMapLabel>
+                            <span>7</span>
+                            <span>8</span>
+                            <span>9</span>
+                        </HeatMapLabel>
+                        <Grid>
+                            {data.map((isColored, index) => (
+                                isColored ? <ColoredCell key={index} color="#4A90E2" /> : <Cell key={index} />
+                            ))}
+                        </Grid>
+                    </GridDiv>
+
                 </HeatMap>
             </LeftDiv>
         </TodoMainStyle>
