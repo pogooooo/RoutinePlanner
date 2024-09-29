@@ -68,35 +68,20 @@ const UserName = styled.div`
     font-weight: bold;
 `
 
-const Ranking = () => {
+const Ranking = ({ userList }) => {
 
-    const userRank = [
-        {id:1, user:"user1", rank:1},
-        {id:2, user:"user2", rank:2},
-        {id:3, user:"user2", rank:3},
-        {id:4, user:"user2", rank:4},
-        {id:2, user:"user2", rank:2},
-        {id:2, user:"user2", rank:2},
-        {id:2, user:"user2", rank:2},
-        {id:2, user:"user2", rank:2},
-        {id:2, user:"user2", rank:2},
-        {id:2, user:"user2", rank:2},
-        {id:2, user:"user2", rank:2},
-        {id:2, user:"user2", rank:2},
-        {id:2, user:"user2", rank:2},
-        {id:3, user:"user3", rank:3}
-    ]
+    const sortedUserList = [...userList].sort((a, b) => b.todoCount - a.todoCount);
 
     return(
         <RankingPage>
             <RankingTag>이번 주 랭킹 순위 TOP5</RankingTag>
             <RankingContent>
-                <RankingInfo># 랭킹은 일주일마다 갱신됩니다.　　　　　　　　　　　　　　　　</RankingInfo>
+                <RankingInfo>　　　　　　　　　　　　　　</RankingInfo>
                 <RankingItem>
-                    {userRank.map((rank) => (
-                        <UserRank key={rank.id} rank={rank.rank}>
-                            <Rank>{rank.rank}</Rank>
-                            <UserName>{rank.user}</UserName>
+                    {sortedUserList.slice(0, 5).map((user, index) => (
+                        <UserRank key={index} rank={index + 1}>
+                            <Rank>{index + 1}위</Rank>
+                            <UserName>{user.username} - 완료된 Todo: {user.todoCount}개</UserName>
                         </UserRank>
                     ))}
                 </RankingItem>

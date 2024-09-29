@@ -10,6 +10,12 @@ import AddProgram from './Components/Program/AddProgram'
 
 function App() {
 
+    const userList= [
+        {username:"user1", todoCount:5},
+        {username:"user2", todoCount:3},
+        {username:"user3", todoCount:0},
+    ]
+
     const LeftNav = styled.div`
         display: flex;
         align-items: center;
@@ -69,9 +75,9 @@ function App() {
             <LeftNav>
                 <ProjectName onClick={() => window.location.href = '/'}>ProjectName</ProjectName>
                 <ColumnHr>|</ColumnHr>
-                <Link className='link' to="/program">프로그램 참가</Link>
+                {/*<Link className='link' to="/program">프로그램 참가</Link>*/}
                 <Link className='link' to="/ranking">랭킹 보기</Link>
-                <Link className='link' to="/community">게시판</Link>
+                {/*<Link className='link' to="/community">게시판</Link>*/}
             </LeftNav>
             <Profile>
                 <UserIcon></UserIcon>
@@ -79,10 +85,10 @@ function App() {
             </Profile>
         </Navigation>
         <Routes>
-            <Route path="/" element={<TodoMain />} />
+            <Route path="/" element={<TodoMain userList={userList} />} />
             <Route path="/signIn" element={<SignIn />} />
             <Route path="/" element={<TodoMain />} />
-            <Route path="/ranking" element={<Rankings />} />
+            <Route path="/ranking" element={<Rankings userList={userList} />} />
             <Route path="/community" element={<Community />} />
             <Route path="/program" element={<Program />} />
             <Route path="/addProgram" element={<AddProgram />} />

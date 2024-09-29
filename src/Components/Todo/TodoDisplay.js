@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import Modal from './Modal';
+import Modal from './Modal';  // Modal 컴포넌트 임포트
 
 const TodoDisplayPage = styled.div`
     background-color: white;
@@ -76,10 +76,11 @@ const AddTodoButton = styled.button`
     color: white;
 `;
 
-const TodoDisplay = ({ setIsAnyTodoChecked, updateTodoCount, onTodosChange }) => {
+const TodoDisplay = ({ setIsAnyTodoChecked, updateTodoCount }) => {
     const [todos, setTodos] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    // 샘플 할 일 데이터 추가
     useEffect(() => {
         const sampleTodos = [
             { id: 1, title: 'Learn React', priority: 'high', isChecked: false },
@@ -87,29 +88,28 @@ const TodoDisplay = ({ setIsAnyTodoChecked, updateTodoCount, onTodosChange }) =>
             { id: 3, title: 'Grocery Shopping', priority: 'low', isChecked: false }
         ];
         setTodos(sampleTodos);
-        onTodosChange(sampleTodos);  // 초기 상태를 부모 컴포넌트로 전달
-    }, [onTodosChange]);
+    }, []);
 
+    // 체크박스 상태 변경 핸들러
     const handleCheckboxChange = (id) => {
         const updatedTodos = todos.map((todo) =>
             todo.id === id ? { ...todo, isChecked: !todo.isChecked } : todo
         );
         setTodos(updatedTodos);
-        onTodosChange(updatedTodos);  // 변경된 상태를 부모 컴포넌트로 전달
 
+        // 하나라도 체크된 항목이 있는지 확인
         const anyChecked = updatedTodos.some(todo => todo.isChecked);
-        setIsAnyTodoChecked(anyChecked);
+        setIsAnyTodoChecked(anyChecked); // 부모 컴포넌트에 상태 전달
         const checkedCount = updatedTodos.filter(todo => todo.isChecked).length;
         updateTodoCount(checkedCount);
     };
 
-
+    // 새로운 할 일 추가 핸들러
     const handleAddTodo = (newTodo) => {
-        const newTodos = [...todos, { id: todos.length + 1, ...newTodo, isChecked: false }];
-        setTodos(newTodos);
-        onTodosChange(newTodos);  // 새로운 할 일 목록을 부모 컴포넌트로 전달
+        setTodos([...todos, { id: todos.length + 1, ...newTodo, isChecked: false }]);
     };
 
+    // 모달 열기/닫기 핸들러
     const handleOpenModal = () => {
         setIsModalOpen(true);
     };
