@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import kakaoLoginImage from '../../Assets/kakao_login_medium_narrow.png';
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const SignInPage = styled.div`
     display: flex;
@@ -32,9 +33,9 @@ const LogInButton = styled.button`
 
 const SignIn = () => {
 
-    const RestApi = '070c652651dd04bf7966123cc83b1d9d'
-    const redirect_uri = 'http%3A%2F%2Flocalhost%3A8080%2Fcallback'
-    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=070c652651dd04b7f966123cc83b1d98&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fcallback&through_account=true`;
+    const RestApi = '070c652651dd04b7f966123cc83b1d98';
+    const redirect_uri = encodeURIComponent('http://localhost:3000'); // URL 인코딩 적용
+    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${RestApi}&redirect_uri=${redirect_uri}&through_account=true`;
 
     const handleLogin = () => {
         window.location.href = KAKAO_AUTH_URL;
@@ -43,17 +44,14 @@ const SignIn = () => {
     const navigate = useNavigate();  // useNavigate 훅 사용
 
     useEffect(() => {
-        // URL에서 인증 코드 추출
         const url = new URL(window.location.href);
         const authorizationCode = url.searchParams.get('code');
 
         if (authorizationCode) {
+            navigate('/signIn'); // 콜백 URL로 이동
             console.log('Authorization Code:', authorizationCode);
-            // 여기서 필요한 작업 수행, 예를 들어 서버로 코드를 전송
-            navigate('/'); // 홈으로 리다이렉트
-        } else {
         }
-    }, [navigate]);
+    }, []);
 
     return (
         <SignInPage>
